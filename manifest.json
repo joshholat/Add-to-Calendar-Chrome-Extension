@@ -5,7 +5,7 @@
 	"icons": { "48": "calendar48.png", "128": "calendar128.png" },
 	"background_page": "background.html",
 	"permissions": [
-		"tabs", "http://*/*", "https://*/*", "http://www.google.com/"
+		"http://www.google.com/"
 	],
 	"content_scripts": [
 		{
