@@ -4,10 +4,8 @@
 <script type="text/javascript" src="chrome_ex_oauth.js"></script>
 
 <script>
-	
 	chrome.extension.onRequest.addListener( function(request, sender, sendResponse) {
 		
-		//if (request.actionType == "pageLoad") {
 			var oauth = ChromeExOAuth.initBackgroundPage({
 			  'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
 			  'authorize_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
@@ -19,11 +17,10 @@
 			});
 
 			function onAuthorized() {
-
+				//do nothing
 			};
 			
-			
-			oauth.authorize(onAuthorized); 
+			oauth.authorize(onAuthorized);
 			//oauth.clearTokens();
 
 			function callback(resp, xhr) {
@@ -55,7 +52,8 @@
 					  <gd:eventStatus value='http://schemas.google.com/g/2005#event.confirmed'>\
 					  </gd:eventStatus>\
 					  <gd:where valueString='" + request.eventLocation + "'></gd:where>\
-					  <gd:when startTime='" + request.eventDate + "T15:00:00.000Z' endTime='" + request.eventDate + "T17:00:00.000Z'></gd:when>\
+					  <gd:when startTime='" + request.eventDate + "T" + request.eventStartTime + "Z'\
+					  		   endTime='" + request.eventDate + "T" + request.eventEndTime + "Z'></gd:when>\
 					</entry>"
 				  };
 
@@ -63,5 +61,6 @@
 			}
 	});
 </script> 
+
 </head>
 </html>
