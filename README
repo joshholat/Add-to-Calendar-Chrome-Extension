@@ -2,6 +2,5 @@ This is a simple Chrome Extension that allows users to highlight dates on a webp
 
 Here is a list of to do items I'm currently working on adding:
 
-- redesign it to make it work on Chrome for Windows (needs to be wider)
-- fix regexs for short month codes like Jan, Feb, etc
 - allow user to select from their various Google Calendars
+- check on redirect issue

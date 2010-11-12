@@ -1,5 +1,3 @@
-//chrome.extension.sendRequest( { actionType: "pageLoad" }, function(response) { }); //used in debugging oauth
-
 document.body.onmouseup = getTextSelection; //a listener for text highlighting
 document.body.onkeypress = closePopUp; //a listener for certain key presses
 
@@ -15,6 +13,16 @@ var endTimeHourTextBox = document.createElement('input');
 var endMinutesTextBox = document.createElement('input');
 var endAMPMTextBox = document.createElement('input');
 
+function setupTextBoxes(whichBox, id, size, placeholder) {
+	whichBox.setAttribute('id', id);
+	whichBox.setAttribute('type', 'text');
+	whichBox.setAttribute('size', size);
+	whichBox.setAttribute('value', '');
+	whichBox.setAttribute('placeholder', placeholder);
+	whichBox.setAttribute('maxlength', size);
+	whichBox.style.float = "right";	
+}
+
 function init() {
 	newDiv.setAttribute('id', 'popOver');
 	newDiv.style.width = "350px";
@@ -22,81 +30,24 @@ function init() {
 	newDiv.style.position = "absolute";
 	newDiv.style.zIndex = "9999";
 	newDiv.style.display = "none";
-	newDiv.style.background = "#FFFFFF";
+	newDiv.style.background = "#C9C8C5";
 	newDiv.style.border = "4px solid #000";
+	newDiv.style.borderRadius = "7px";
 	newDiv.style.padding = "5px 5px 5px 5px";
-	newDiv.innerHTML = "";
 	newDiv.style.left = "300px";
+	newDiv.innerHTML = "";
 	document.body.appendChild(newDiv);
 
-	titleTextBox.setAttribute('id', 'titleText');
-	titleTextBox.setAttribute('type', 'text');
-	titleTextBox.setAttribute('size', '40');
-	titleTextBox.setAttribute('value', '');
-	titleTextBox.setAttribute('placeholder', 'Event Title');
-	titleTextBox.style.float = "right";
-
-	detailTextBox.setAttribute('id', 'detailText');
-	detailTextBox.setAttribute('type', 'text');
-	detailTextBox.setAttribute('size', '40');
-	detailTextBox.setAttribute('value', '');
-	detailTextBox.setAttribute('placeholder', 'Event Details (Optional)');
-	detailTextBox.style.float = "right";
-
-	locationTextBox.setAttribute('id', 'locationText');
-	locationTextBox.setAttribute('type', 'text');
-	locationTextBox.setAttribute('size', '40');
-	locationTextBox.setAttribute('value', '');
-	locationTextBox.setAttribute('placeholder', 'Event Location');
-	locationTextBox.style.float = "right";
-
-	dateTextBox.setAttribute('id', 'dateText');
-	dateTextBox.setAttribute('type', 'text');
-	dateTextBox.setAttribute('size', '12');
-	dateTextBox.setAttribute('maxlength', '10');
-	//dateTextBox.setAttribute('value', '');
-	dateTextBox.setAttribute('placeholder', 'Date');
-	dateTextBox.style.float = "right";
-
-	beginTimeHourTextBox.setAttribute('id', 'beginHour');
-	beginTimeHourTextBox.setAttribute('type', 'text');
-	beginTimeHourTextBox.setAttribute('size', '2');
-	beginTimeHourTextBox.setAttribute('maxlength', '2');
-	beginTimeHourTextBox.style.float = "right";
-
-	beginMinutesTextBox.setAttribute('id', 'beginMinutes');
-	beginMinutesTextBox.setAttribute('type', 'text');
-	beginMinutesTextBox.setAttribute('size', '2');
-	beginMinutesTextBox.setAttribute('maxlength', '2');
-	beginMinutesTextBox.style.float = "right";
-
-	beginAMPMTextBox.setAttribute('id', 'beginAMPM');
-	beginAMPMTextBox.setAttribute('type', 'text');
-	beginAMPMTextBox.setAttribute('size', '2');
-	beginAMPMTextBox.setAttribute('maxlength', '2');
-	//beginAMPMTextBox.setAttribute('value', '');
-	beginAMPMTextBox.setAttribute('placeholder', 'PM');
-	beginAMPMTextBox.style.float = "right";
-
-	endTimeHourTextBox.setAttribute('id', 'endHour');
-	endTimeHourTextBox.setAttribute('type', 'text');
-	endTimeHourTextBox.setAttribute('size', '2');
-	endTimeHourTextBox.setAttribute('maxlength', '2');
-	endTimeHourTextBox.style.float = "right";
-
-	endMinutesTextBox.setAttribute('id', 'endMinutes');
-	endMinutesTextBox.setAttribute('type', 'text');
-	endMinutesTextBox.setAttribute('size', '2');
-	endMinutesTextBox.setAttribute('maxlength', '2');
-	endMinutesTextBox.style.float = "right";
-
-	endAMPMTextBox.setAttribute('id', 'endAMPM');
-	endAMPMTextBox.setAttribute('type', 'text');
-	endAMPMTextBox.setAttribute('size', '2');
-	endAMPMTextBox.setAttribute('maxlength', '2');
-	endAMPMTextBox.setAttribute('value', '');
-	endAMPMTextBox.setAttribute('placeholder', 'PM');
-	endAMPMTextBox.style.float = "right";
+	setupTextBoxes(titleTextBox, "titleText", "40", "Event Title");
+	setupTextBoxes(detailTextBox, "detailText", "40", "Event Details (Optional)");
+	setupTextBoxes(locationTextBox, "locationText", "40", "Event Location");
+	setupTextBoxes(dateTextBox, "dateText", "12", "Date");
+	setupTextBoxes(beginTimeHourTextBox, "beginHour", "2", "");
+	setupTextBoxes(beginMinutesTextBox, "beginMinutes", "2", "");
+	setupTextBoxes(beginAMPMTextBox, "beginAMPM", "2", "PM");
+	setupTextBoxes(endTimeHourTextBox, "endHour", "2", "");
+	setupTextBoxes(endMinutesTextBox, "endMinutes", "2", "");
+	setupTextBoxes(endAMPMTextBox, "endAMPM", "2", "PM");
 }
 
 function closePopUp(evt) {
@@ -150,12 +101,10 @@ function getTextSelection() {
 		foundDate = true;
 		theDate = Date.parse(textSelection);
 	}
-	
-	if (foundDate && theDate != null) {
-		theDate = Date.parse(textSelection);
-		theDate = theDate.toString();
 
-		// issue with this - Oct 31 (THU) 7 PM -> formatting
+	if (foundDate && theDate != null && textSelection.length > 1 && textSelection.length < 40) {
+		init();
+		theDate = theDate.toString();
 		
 		if (theDate.indexOf("Jan") > -1) month = "01";
 		else if (theDate.indexOf("Feb") > -1) month = "02";
@@ -181,6 +130,14 @@ function getTextSelection() {
 		hour = theDate.substring(0, 2);
 		minutes = theDate.substring(3, 5);
 		
+		if (parseInt(hour) > 12) {
+			hour = String(hour - 12);
+		}
+		
+		if (hour.length == 1) {
+			hour = "0" + hour;
+		}
+		
 		beginTimeHourTextBox.setAttribute('value', hour);
 		beginMinutesTextBox.setAttribute('value', minutes);
 		
@@ -189,12 +146,7 @@ function getTextSelection() {
 		} else {
 			beginAMPMTextBox.setAttribute('value', 'PM');
 		}
-	} else {
-		foundDate = false;
-	}
-		
-	if (textSelection.length > 1 && textSelection.length < 40 && foundDate) {
-		init();
+
 		$("#popOver").fadeIn("slow");
 		newDiv.style.top = window.pageYOffset + 20 + "px";
 		newDiv.innerHTML = "<div style='color: black; text-align: center; margin-left: auto; margin-right: auto; font-size: 14px;  font-family: \"Times New Roman\";'>\
@@ -235,187 +187,3 @@ function getTextSelection() {
 		chrome.extension.sendRequest( { actionType: "popover" }, function(response) { });
 	}
 }
-
-
-
-
-
-
-
-/* ------------------------------ OLD PARSING CODE -----------------
-
-if (textSelection.match(monthPattern)) {
-	foundDate = true;
-	theDate = textSelection.toLowerCase();
-	foundType = "monthPattern"; //convert the month to a number and try to find a date/year otherwise use the current year
-	
-	if (theDate.indexOf("january") > -1) month = "01";
-	else if (theDate.indexOf("february") > -1) month = "02";
-	else if (theDate.indexOf("march") > -1) month = "03";
-	else if (theDate.indexOf("april") > -1) month = "04";
-	else if (theDate.indexOf("may") > -1) month = "05";
-	else if (theDate.indexOf("june") > -1) month = "06";
-	else if (theDate.indexOf("july") > -1) month = "07";
-	else if (theDate.indexOf("august") > -1) month = "08";
-	else if (theDate.indexOf("september") > -1) month = "09";
-	else if (theDate.indexOf("october") > -1) month = "10";
-	else if (theDate.indexOf("november") > -1) month = "11";
-	else if (theDate.indexOf("december") > -1) month = "12";
-	
-	if (theDate.indexOf("st") > -1) {
-		if (theDate.indexOf("august") > -1) {
-			if (theDate.indexOf("august") < 3) {
-				day = theDate.substring(theDate.indexOf("st") + 2);
-				day = day.substring(day.indexOf("st") - 2, day.indexOf("st"));				
-			} else {
-				day = "DD"; //give up looking for it
-			}
-		} else {
-			day = theDate.substring(theDate.indexOf("st") - 2, theDate.indexOf("st"));				
-		}
-	} else if (theDate.indexOf("nd") > -1) {
-		day = theDate.substring(theDate.indexOf("nd") - 2, theDate.indexOf("nd"));
-	} else if (theDate.indexOf("th") > -1) {
-		day = theDate.substring(theDate.indexOf("th") - 2, theDate.indexOf("th"));
-	} else {
-		day = 'DD';
-	}
-	
-	if (theDate.indexOf("201") > -1) {
-		year = theDate.substring(theDate.indexOf("201"), theDate.indexOf("201") + 4);
-	} else {
-		year = "2010";
-	}
-	
-	theDate = year + "-" + month + "-" + day;
-
-	dateTextBox.setAttribute('value', theDate);
-} else if (textSelection.match(shortMonthPattern)) {
-	foundDate = true;
-	theDate = textSelection.toLowerCase();
-	foundType = "shortMonthPattern"; //convert the month to a number and try to find a date/year otherwise use the current year
-	
-	if (theDate.indexOf("jan") > -1) month = "01";
-	else if (theDate.indexOf("feb") > -1) month = "02";
-	else if (theDate.indexOf("mar") > -1) month = "03";
-	else if (theDate.indexOf("apr") > -1) month = "04";
-	else if (theDate.indexOf("may") > -1) month = "05";
-	else if (theDate.indexOf("jun") > -1) month = "06";
-	else if (theDate.indexOf("jul") > -1) month = "07";
-	else if (theDate.indexOf("aug") > -1) month = "08";
-	else if (theDate.indexOf("sep") > -1) month = "09";
-	else if (theDate.indexOf("oct") > -1) month = "10";
-	else if (theDate.indexOf("nov") > -1) month = "11";
-	else if (theDate.indexOf("dec") > -1) month = "12";
-	
-	if (theDate.indexOf("st") > -1) {
-		day = theDate.substring(theDate.indexOf("st") - 2, theDate.indexOf("st"));
-	} else if (theDate.indexOf("nd") > -1) {
-		day = theDate.substring(theDate.indexOf("nd") - 2, theDate.indexOf("nd"));
-	} else if (theDate.indexOf("th") > -1) {
-		day = theDate.substring(theDate.indexOf("th") - 2, theDate.indexOf("th"));
-		if (!parseInt(day)) {
-			day = "DD";
-		}
-	}
-	
-	for (var i = 0; i < theDate.length - 1; i++) {
-		if (parseInt(String(theDate.charAt(i) + theDate.charAt(i + 1)))) {
-			if (parseInt(String(theDate.charAt(i + 1) + theDate.charAt(i + 2)))) {
-				day = String(theDate.charAt(i + 1) + theDate.charAt(i + 2));
-				break;
-			}
-			day = String(theDate.charAt(i) + theDate.charAt(i + 1));
-			break;
-		}
-	}
-	if (day.indexOf(" ") > -1) {
-		day = "0" + day;
-	}
-	
-	if (theDate.indexOf("201") > -1) {
-		year = theDate.substring(theDate.indexOf("201"), theDate.indexOf("201") + 4);
-	} else {
-		year = "2010";
-	}
-	
-	theDate = year + "-" + month + "-" + day;
-	dateTextBox.setAttribute('value', theDate);
-	
-	theDate = textSelection.toLowerCase();
-	if (theDate.indexOf("pm") > -1) {
-		if (theDate.indexOf(":") > -1 && Math.abs((theDate.indexOf(":") - theDate.indexOf("pm"))) < 5) {
-			hour = theDate.substring(theDate.indexOf(":") - 2, theDate.indexOf(":"));
-			minutes = theDate.substring(theDate.indexOf(":") + 1, theDate.indexOf(":") + 3);
-		} else {
-			hour = theDate.substring(theDate.indexOf("pm") - 2, theDate.indexOf("pm"));
-			minutes = "00";
-		}
-		beginAMPMTextBox.setAttribute('value', 'PM');
-	} else {
-		if (theDate.indexOf(":") > -1 && Math.abs((theDate.indexOf(":") - theDate.indexOf("pm"))) < 5) {
-			hour = theDate.substring(theDate.indexOf(":") - 2, theDate.indexOf(":"));
-			minutes = theDate.substring(theDate.indexOf(":") + 1, theDate.indexOf(":") + 3);
-		} else {
-			hour = theDate.substring(theDate.indexOf("am") - 2, theDate.indexOf("am"));
-			minutes = "00";
-		}			
-		beginAMPMTextBox.setAttribute('value', 'AM');
-	}
-	
-	beginTimeHourTextBox.setAttribute('value', hour);
-	beginMinutesTextBox.setAttribute('value', minutes);
-} else if (textSelection.match(timeDateStamp)) {
-	foundDate = true;
-	foundType = "timeDateStamp"; 
-	if (textSelection.length <= 10) { //reverse it the right way and use dashes so that google likes it
-		if (textSelection.indexOf('/') <= 3) {
-			day += textSelection.substring(0, textSelection.indexOf('/'));
-			month += textSelection.substring(day.length + 1, textSelection.length - 5);
-			year += textSelection.substring(textSelection.length - 4);
-		}
-		
-		theDate = year + "-" + month + "-" + day;
-
-		dateTextBox.setAttribute('value', theDate);
-	} else {
-		if (textSelection.indexOf('/') <= 3) {
-			day += textSelection.substring(0, textSelection.indexOf('/'));
-			month += textSelection.substring(day.length + 1, day.length + 3);
-			year += textSelection.substring(day.length + 4, day.length + 8);
-		}
-		
-		theDate = year + "-" + month + "-" + day;
-
-		dateTextBox.setAttribute('value', theDate);	
-		
-		theDate = textSelection.toLowerCase();
-		if (theDate.indexOf("pm") > -1) {
-			if (theDate.indexOf(":") > -1) {
-				hour = theDate.substring(theDate.indexOf(":") - 2, theDate.indexOf(":"));
-				minutes = theDate.substring(theDate.indexOf(":") + 1, theDate.indexOf(":") + 3);
-			} else {
-				hour = theDate.substring(theDate.indexOf("pm") - 2, theDate.indexOf("pm"));
-				minutes = "00";
-			}
-			beginAMPMTextBox.setAttribute('value', 'PM');
-		} else {
-			if (theDate.indexOf(":") > -1) {
-				hour = theDate.substring(theDate.indexOf(":") - 2, theDate.indexOf(":"));
-				minutes = theDate.substring(theDate.indexOf(":") + 1, theDate.indexOf(":") + 3);
-			} else {
-				hour = theDate.substring(theDate.indexOf("am") - 2, theDate.indexOf("am"));
-				minutes = "00";
-			}			
-			beginAMPMTextBox.setAttribute('value', 'AM');
-		}
-
-		beginTimeHourTextBox.setAttribute('value', hour);
-		beginMinutesTextBox.setAttribute('value', minutes);
-	}
-} else if (textSelection.match(dashMonthPattern)) {
-	foundDate = true;
-	foundType = "dashMonthPattern"; //doesn't need to be reversed because the wrong way won't match the regex
-	theDate = textSelection;
-	dateTextBox.setAttribute('value', theDate);
-}*/
