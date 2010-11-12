@@ -1,6 +1,14 @@
 This is a simple Chrome Extension that allows users to highlight dates on a webpage and then easily add them to Google Calendar.
 
-Here is a list of to do items I'm currently working on adding:
-
+TODO
 - allow user to select from their various Google Calendars
 - check on redirect issue
+
+CHANGELOG
+Version 1.3.1: Changed some more of the design and made the code a bit more robust
+Version 1.3: Changed some design elements and added a way to close the popup without refreshing the page
+Version 1.2.2: Changed over to Date.js for date parsing
+Version 1.2.1: Changed some permissions
+Version 1.2: Added support for more time formats
+Version 1.1: Fixed an infinite loop authorization bug
+Version 1.0: Initial upload
