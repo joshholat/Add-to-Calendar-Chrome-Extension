@@ -4,6 +4,4 @@ Here is a list of to do items I'm currently working on adding:
 
 - redesign it to make it work on Chrome for Windows (needs to be wider)
 - fix regexs for short month codes like Jan, Feb, etc
-- a button to hide the popup for when it is display when the user doesn't want it to be
-- Nov. 3, 2010 - dates in this format don't work, add support for them
 - allow user to select from their various Google Calendars
