@@ -25,8 +25,8 @@ function setupTextBoxes(whichBox, id, size, placeholder) {
 
 function init() {
 	newDiv.setAttribute('id', 'popOver');
-	newDiv.style.width = "350px";
-	newDiv.style.height = "300px";
+	newDiv.style.width = "475px";
+	newDiv.style.height = "350px";
 	newDiv.style.position = "absolute";
 	newDiv.style.zIndex = "9999";
 	newDiv.style.display = "none";
@@ -60,8 +60,10 @@ function closePopUp(evt) {
 			alert("The date you entered is not correct. It should be in the form of YYYY-MM-DD.");
 		} else {
 			
-			if (beginAMPM.value.toString().toLowerCase() == "pm") {
+			if (beginAMPM.value.toString().toLowerCase() == "pm" && beginHour.value.toString() != "12") {
 				hour = parseInt(beginHour.value.toString()) + 12;
+			} else if (beginAMPM.value.toString().toLowerCase() == "am" && beginHour.value.toString() == "12") {
+				hour = "00";
 			} else {
 				hour = parseInt(beginHour.value.toString());
 			}
@@ -78,7 +80,7 @@ function closePopUp(evt) {
 					endTime = endHour.value + ":" + endMinutes.value + ":" + "00.000";
 				}
 			}
-									
+												
 			chrome.extension.sendRequest( { actionType: "popOverCleared", eventTitle: titleText.value, eventDetails: detailText.value, eventLocation: locationText.value, eventDate: dateText.value, eventStartTime: beginningTime, eventEndTime: endTime}, function(response) { });
 			$('#popOver').fadeOut('slow', function() { }); //hides the popover
 		}
@@ -151,23 +153,31 @@ function getTextSelection() {
 		newDiv.style.top = window.pageYOffset + 20 + "px";
 		newDiv.innerHTML = "<div style='color: black; text-align: center; margin-left: auto; margin-right: auto; font-size: 14px;  font-family: \"Times New Roman\";'>\
 							<u>Highlighted Text</u><br/>" + textSelection.toString() + "</div><br/><br/>";
-		
+
+		newDiv.innerHTML += "<div style='width:425px; float:right;'>";		
 		document.getElementById("popOver").appendChild(titleTextBox);
+		newDiv.innerHTML += "</div>";		
+
+		newDiv.innerHTML += "<div style='width:425px; float:right;'>";
 		document.getElementById("popOver").appendChild(detailTextBox);
-		document.getElementById("popOver").appendChild(locationTextBox);
+		newDiv.innerHTML += "</div>";
 		
-		newDiv.innerHTML += "<div style='width:300px; float:right;'>";
+		newDiv.innerHTML += "<div style='width:425px; float:right;'>";
+		document.getElementById("popOver").appendChild(locationTextBox);
+		newDiv.innerHTML += "</div>";		
+
+		newDiv.innerHTML += "<div style='width:425px; float:right;'>";
 		document.getElementById("popOver").appendChild(dateTextBox);	
 		newDiv.innerHTML += "</div>";		
 		
-		newDiv.innerHTML += "<div style='width:300px; float:right;'>";		
+		newDiv.innerHTML += "<div style='width:425px; float:right;'>";		
 		document.getElementById("popOver").appendChild(beginAMPMTextBox);
 		document.getElementById("popOver").appendChild(beginMinutesTextBox);
 		newDiv.innerHTML += "<div style='float:right;'>:</div>";		
 		document.getElementById("popOver").appendChild(beginTimeHourTextBox);
 		newDiv.innerHTML += "</div>";	
 		
-		newDiv.innerHTML += "<div style='width:300px; float:right;'>";		
+		newDiv.innerHTML += "<div style='width:425px; float:right;'>";		
 		document.getElementById("popOver").appendChild(endAMPMTextBox);
 		document.getElementById("popOver").appendChild(endMinutesTextBox);
 		newDiv.innerHTML += "<div style='float:right;'>:</div>";		
@@ -182,7 +192,7 @@ function getTextSelection() {
 							<div style='padding-bottom:8px;'>Event Begin Time:</div>\
 							<div style='padding-bottom:8px;'>Event End Time:</div>\
 							<br/><br/><center>When you're finished, tap 'Enter' to have your event added.\
-							<br/><br/>To close the popup and cancel the entry, tap 'Shift' + '|'.</center></div>";
+							<br/><br/>To close the popup and cancel the entry, tap 'Shift' + '\\'.</center></div>";
 		
 		chrome.extension.sendRequest( { actionType: "popover" }, function(response) { });
 	}
