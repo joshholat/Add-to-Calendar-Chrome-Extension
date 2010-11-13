@@ -1,16 +1,16 @@
 {
 	"name": "Add Event to Google Calendar",
-	"version": "1.3.2",
+	"version": "1.4.0",
 	"description": "A user can add events to Google Calendar by simply highlighting dates that appear on a webpage.",
 	"icons": { "48": "calendar48.png", "128": "calendar128.png" },
 	"background_page": "background.html",
 	"permissions": [
-		"http://www.google.com/"
+		"tabs", "http://*/*", "https://*/*", "http://www.google.com/"
 	],
 	"content_scripts": [
 		{
 		"matches": ["<all_urls>"],
-    	"js": ["jquery.js", "content_script.js", "date.js"]
+    	"js": ["jquery.js", "date.js", "content_script.js"]
 		}
 	]
 }

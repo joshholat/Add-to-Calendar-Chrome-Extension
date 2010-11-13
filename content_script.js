@@ -80,7 +80,15 @@ function closePopUp(evt) {
 					endTime = endHour.value + ":" + endMinutes.value + ":" + "00.000";
 				}
 			}
-												
+						
+			if (beginningTime.indexOf(":") == 1) {
+				beginningTime = "0" + beginningTime;
+			}
+			
+			if (endTime.indexOf(":") == 1) {
+				endTime = "0" + endTime;
+			}
+															
 			chrome.extension.sendRequest( { actionType: "popOverCleared", eventTitle: titleText.value, eventDetails: detailText.value, eventLocation: locationText.value, eventDate: dateText.value, eventStartTime: beginningTime, eventEndTime: endTime}, function(response) { });
 			$('#popOver').fadeOut('slow', function() { }); //hides the popover
 		}

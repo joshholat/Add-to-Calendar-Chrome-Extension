@@ -5,9 +5,9 @@
 
 <script>
 	chrome.extension.onRequest.addListener( function(request, sender, sendResponse) {
-				
-		if (request.actionType == "popover") {
-						
+			
+			//oauth.clearTokens();
+			
 			var oauth = ChromeExOAuth.initBackgroundPage({
 			  'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
 			  'authorize_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
@@ -18,26 +18,21 @@
 			  'app_name': 'Add Events to Google Calendar'
 			});
 			
-			//oauth.clearTokens();
-			
 			oauth.authorize(function() {
-				alert("auth");
 	        });
 			
 			function callback(resp, xhr) {
-				alert(resp);
-				if (resp.length > 20 && resp.indexOf("Badly") == -1 )
+				if (resp.indexOf("event.confirmed") != -1)
 					alert("Your event was successfully added!");
 				else
-					alert("Sorry, an error occurred while adding your event.");
+					alert("Sorry, an error occurred while adding your event: " + resp);
 			};
-		}
 			
 	 	if (request.actionType == "popOverCleared") { //Then add the event
 			var url = 'http://www.google.com/calendar/feeds/default/private/full';
 			//var test = oauth.getAuthorizationHeader(url, 'POST', {'alt': 'json'});
 
-			var request = {
+			var theRequest = {
 				    'method': 'POST',
 				    'headers': {
 				      'GData-Version': '2.0',
@@ -55,12 +50,12 @@
 					<gd:eventStatus value='http://schemas.google.com/g/2005#event.confirmed'>\
 					</gd:eventStatus>\
 				  	<gd:where valueString='" + request.eventLocation + "'></gd:where>\
-				  	<gd:when startTime='" + request.eventDate + "T" + request.eventStartTime + "Z'\
-				  		   endTime='" + request.eventDate + "T" + request.eventEndTime + "Z'></gd:when>\
+					<gd:when startTime='" + request.eventDate + "T" + request.eventStartTime + "'\
+				  		   endTime='" + request.eventDate + "T" + request.eventEndTime + "'></gd:when>\
 				</entry>"
 			};
-						
-			oauth.sendSignedRequest(url, callback, request);
+									
+			oauth.sendSignedRequest(url, callback, theRequest);
 		}
 	});
 </script> 

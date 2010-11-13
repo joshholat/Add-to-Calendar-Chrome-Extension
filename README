@@ -2,9 +2,9 @@ This is a simple Chrome Extension that allows users to highlight dates on a webp
 
 TODO
 - allow user to select from their various Google Calendars
-- check on redirect issue
 
 CHANGELOG
+Version 1.4.0: Fixed authorization issue and timing issue
 Version 1.3.2: Fixed some more formatting and timing issues
 Version 1.3.1: Changed some more of the design and made the code a bit more robust
 Version 1.3: Changed some design elements and added a way to close the popup without refreshing the page
