@@ -5,7 +5,9 @@
 
 <script>
 	chrome.extension.onRequest.addListener( function(request, sender, sendResponse) {
-		
+				
+		if (request.actionType == "popover") {
+						
 			var oauth = ChromeExOAuth.initBackgroundPage({
 			  'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
 			  'authorize_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
@@ -15,26 +17,27 @@
 			  'scope': 'http://www.google.com/calendar/feeds/',
 			  'app_name': 'Add Events to Google Calendar'
 			});
-
-			function onAuthorized() {
-				//do nothing
-			};
 			
-			oauth.authorize(onAuthorized);
 			//oauth.clearTokens();
-
+			
+			oauth.authorize(function() {
+				alert("auth");
+	        });
+			
 			function callback(resp, xhr) {
+				alert(resp);
 				if (resp.length > 20 && resp.indexOf("Badly") == -1 )
 					alert("Your event was successfully added!");
 				else
 					alert("Sorry, an error occurred while adding your event.");
 			};
+		}
 			
-	 		if (request.actionType == "popOverCleared") { //Then add the event
-					var url = 'http://www.google.com/calendar/feeds/default/private/full';
-					//var test = oauth.getAuthorizationHeader(url, 'POST', {'alt': 'json'});
+	 	if (request.actionType == "popOverCleared") { //Then add the event
+			var url = 'http://www.google.com/calendar/feeds/default/private/full';
+			//var test = oauth.getAuthorizationHeader(url, 'POST', {'alt': 'json'});
 
-					var request = {
+			var request = {
 				    'method': 'POST',
 				    'headers': {
 				      'GData-Version': '2.0',
@@ -45,20 +48,20 @@
 				    },
 				    'body': "<entry xmlns='http://www.w3.org/2005/Atom' xmlns:gd='http://schemas.google.com/g/2005'>\
 					<category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2005#event'></category>\
-					  <title type='text'>" + request.eventTitle + "</title>\
-					  <content type='text'>" + request.eventDetails + "</content>\
-					  <gd:transparency value='http://schemas.google.com/g/2005#event.opaque'>\
-					  </gd:transparency>\
-					  <gd:eventStatus value='http://schemas.google.com/g/2005#event.confirmed'>\
-					  </gd:eventStatus>\
-					  <gd:where valueString='" + request.eventLocation + "'></gd:where>\
-					  <gd:when startTime='" + request.eventDate + "T" + request.eventStartTime + "Z'\
-					  		   endTime='" + request.eventDate + "T" + request.eventEndTime + "Z'></gd:when>\
-					</entry>"
-				  };
-
-				oauth.sendSignedRequest(url, callback, request);
-			}
+					<title type='text'>" + request.eventTitle + "</title>\
+					<content type='text'>" + request.eventDetails + "</content>\
+					<gd:transparency value='http://schemas.google.com/g/2005#event.opaque'>\
+					</gd:transparency>\
+					<gd:eventStatus value='http://schemas.google.com/g/2005#event.confirmed'>\
+					</gd:eventStatus>\
+				  	<gd:where valueString='" + request.eventLocation + "'></gd:where>\
+				  	<gd:when startTime='" + request.eventDate + "T" + request.eventStartTime + "Z'\
+				  		   endTime='" + request.eventDate + "T" + request.eventEndTime + "Z'></gd:when>\
+				</entry>"
+			};
+						
+			oauth.sendSignedRequest(url, callback, request);
+		}
 	});
 </script> 
 
